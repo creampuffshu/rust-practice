@@ -1,5 +1,4 @@
 use crate::student::{Status, Student};
-use core::num;
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 
@@ -78,7 +77,7 @@ impl Classroom {
             "add" => {
                 if parts.len() == 2 {
                     let name = parts[1];
-                    if self.add_student(name.to_string()) == false {
+                    if !self.add_student(name.to_string()) {
                         return Err(CommandError::DuplicatedStudent);
                     }
                 } else {
@@ -92,7 +91,9 @@ impl Classroom {
                     let student = self
                         .find_student_mut(name)
                         .ok_or(CommandError::NotFindStudent)?;
-                    student.add_score(score);
+                    if !student.add_score(score) {
+                        return Err(CommandError::CannotAddScore);
+                    }
                 } else {
                     return Err(CommandError::WrongArgsNum);
                 }
@@ -113,7 +114,7 @@ impl Classroom {
                             return Err(CommandError::WrongStatus);
                         }
                     }
-                }else{
+                } else {
                     return Err(CommandError::WrongArgsNum);
                 }
             }
@@ -149,10 +150,11 @@ impl Classroom {
             }
         }
 
-        return Ok(());
+        Ok(())
     }
 }
 
+#[derive(Debug)]
 pub enum CommandError {
     WrongArgsNum,
     NonExistentCommand,
@@ -160,6 +162,7 @@ pub enum CommandError {
     DuplicatedStudent,
     FailParse,
     WrongStatus,
+    CannotAddScore,
 }
 
 impl From<std::num::ParseIntError> for CommandError {

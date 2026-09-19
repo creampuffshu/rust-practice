@@ -1,6 +1,6 @@
 mod classroom;
 mod student;
-use classroom::{Classroom,CommandError};
+use classroom::{Classroom, CommandError};
 
 fn main() {
     let mut classroom = Classroom::new();
