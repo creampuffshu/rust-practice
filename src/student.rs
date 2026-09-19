@@ -1,9 +1,9 @@
-pub struct Student{
+pub struct Student {
     name: String,
     scores: Vec<i32>,
     status: Status,
 }
-pub enum Status{
+pub enum Status {
     Active,
     Leave,
     Graduated,
@@ -30,12 +30,9 @@ impl Student {
             Status::Active => {
                 self.scores.push(score);
                 true
-            },
-            _ => {
-                false
-            },
+            }
+            _ => false,
         }
-        
     }
     pub fn rename(&mut self, new_name: String) {
         self.name = new_name;
@@ -58,7 +55,7 @@ impl Student {
         self.print_status();
         if self.scores.is_empty() {
             println!("점수 없음")
-        }else{
+        } else {
             print!("점수: ");
             for score in &self.scores {
                 print!("{} ", score);

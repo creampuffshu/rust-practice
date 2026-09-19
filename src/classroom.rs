@@ -1,5 +1,5 @@
-use std::{collections::HashMap};
-use crate::student::{Student};
+use crate::student::Student;
+use std::collections::HashMap;
 
 pub struct Classroom {
     students: HashMap<String, Student>,
@@ -15,9 +15,9 @@ impl Classroom {
     pub fn add_student(&mut self, name: String) -> bool {
         if self.students.contains_key(&name) {
             false
-        }else{
+        } else {
             let student = Student::new(name.clone());
-            self.students.insert(name,student);
+            self.students.insert(name, student);
             true
         }
     }
@@ -35,7 +35,7 @@ impl Classroom {
     }
 
     pub fn print_all(&self) {
-        for (_ ,student) in &self.students {
+        for (_, student) in &self.students {
             student.print();
         }
     }
@@ -45,10 +45,10 @@ impl Classroom {
             return false;
         }
         if let Some(mut student) = self.remove_student(old_name) {
-            student.rename(new_name.clone()); 
+            student.rename(new_name.clone());
             self.students.insert(new_name, student);
             true
-        }else {
+        } else {
             false
         }
     }
@@ -61,7 +61,7 @@ impl Classroom {
         let mut count = 0;
         for (_, student) in &self.students {
             if student.is_active() {
-                count+=1;
+                count += 1;
             }
         }
         count
