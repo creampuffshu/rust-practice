@@ -1,0 +1,1 @@
+A repository for practicing Rust while studying with the [Korean Rust documentation](https://doc.rust-kr.org/).
