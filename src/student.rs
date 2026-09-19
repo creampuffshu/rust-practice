@@ -3,6 +3,8 @@ pub struct Student {
     scores: Vec<i32>,
     status: Status,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
     Active,
     Leave,
@@ -11,18 +13,15 @@ pub enum Status {
 
 impl Student {
     pub fn new(name: String) -> Self {
-        Student {
-            name: name,
+        Self {
+            name,
             scores: Vec::new(),
             status: Status::Active,
         }
     }
 
     pub fn is_active(&self) -> bool {
-        match self.status {
-            Status::Active => true,
-            _ => false,
-        }
+        self.status == Status::Active
     }
 
     pub fn add_score(&mut self, score: i32) -> bool {

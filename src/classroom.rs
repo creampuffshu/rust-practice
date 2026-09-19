@@ -1,5 +1,6 @@
 use crate::student::Student;
 use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 
 pub struct Classroom {
     students: HashMap<String, Student>,
@@ -7,18 +8,18 @@ pub struct Classroom {
 
 impl Classroom {
     pub fn new() -> Self {
-        Classroom {
+        Self {
             students: HashMap::new(),
         }
     }
 
     pub fn add_student(&mut self, name: String) -> bool {
-        if self.students.contains_key(&name) {
-            false
-        } else {
-            let student = Student::new(name.clone());
-            self.students.insert(name, student);
-            true
+        match self.students.entry(name.clone()) {
+            Entry::Vacant(entry) => {
+                entry.insert(Student::new(name));
+                true
+            }
+            Entry::Occupied(_) => false,
         }
     }
 
@@ -35,7 +36,7 @@ impl Classroom {
     }
 
     pub fn print_all(&self) {
-        for (_, student) in &self.students {
+        for student in self.students.values() {
             student.print();
         }
     }
@@ -59,7 +60,7 @@ impl Classroom {
 
     pub fn active_student_count(&self) -> usize {
         let mut count = 0;
-        for (_, student) in &self.students {
+        for student in self.students.values() {
             if student.is_active() {
                 count += 1;
             }
