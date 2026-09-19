@@ -1,4 +1,5 @@
 use crate::student::{Status, Student};
+use core::num;
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 
@@ -68,79 +69,101 @@ impl Classroom {
         count
     }
 
-    pub fn execute(&mut self, command: &str) {
+    pub fn execute(&mut self, command: &str) -> Result<(), CommandError> {
         let parts: Vec<&str> = command.split_whitespace().collect();
         if parts.is_empty() {
-            return;
+            return Err(CommandError::WrongArgsNum);
         }
         match parts[0] {
             "add" => {
                 if parts.len() == 2 {
                     let name = parts[1];
-                    self.add_student(name.to_string());
-                    return;
+                    if self.add_student(name.to_string()) == false {
+                        return Err(CommandError::DuplicatedStudent);
+                    }
+                } else {
+                    return Err(CommandError::WrongArgsNum);
                 }
             }
             "score" => {
                 if parts.len() == 3 {
                     let name = parts[1];
-                    if let Ok(score) = parts[2].parse::<i32>() {
-                        if let Some(student) = self.find_student_mut(name) {
-                            student.add_score(score);
-                            return;
-                        }
-                    }
+                    let score = parts[2].parse::<i32>()?;
+                    let student = self
+                        .find_student_mut(name)
+                        .ok_or(CommandError::NotFindStudent)?;
+                    student.add_score(score);
+                } else {
+                    return Err(CommandError::WrongArgsNum);
                 }
             }
             "status" => {
                 if parts.len() == 3 {
                     let name = parts[1];
                     let status = parts[2];
-                    if let Some(student) = self.find_student_mut(name) {
-                        match status {
-                            "active" => {
-                                student.change_status(Status::Active);
-                                return;
-                            }
-                            "leave" => {
-                                student.change_status(Status::Leave);
-                                return;
-                            }
-                            "graduated" => {
-                                student.change_status(Status::Graduated);
-                                return;
-                            }
-                            _ => {}
+                    let student = self
+                        .find_student_mut(name)
+                        .ok_or(CommandError::NotFindStudent)?;
+
+                    match status {
+                        "active" => student.change_status(Status::Active),
+                        "leave" => student.change_status(Status::Leave),
+                        "graduated" => student.change_status(Status::Graduated),
+                        _ => {
+                            return Err(CommandError::WrongStatus);
                         }
                     }
+                }else{
+                    return Err(CommandError::WrongArgsNum);
                 }
             }
             "show" => {
                 if parts.len() == 2 {
                     let name = parts[1];
-                    if let Some(student) = self.find_student(name) {
-                        student.print();
-                        return;
-                    }
+                    let student = self
+                        .find_student(name)
+                        .ok_or(CommandError::NotFindStudent)?;
+                    student.print();
+                } else {
+                    return Err(CommandError::WrongArgsNum);
                 }
             }
             "remove" => {
                 if parts.len() == 2 {
                     let name = parts[1];
-                    self.remove_student(name);
-                    return;
+                    self.remove_student(name)
+                        .ok_or(CommandError::NotFindStudent)?;
+                } else {
+                    return Err(CommandError::WrongArgsNum);
                 }
             }
             "list" => {
-                println!("list");
                 if parts.len() == 1 {
                     self.print_all();
-                    return;
+                } else {
+                    return Err(CommandError::WrongArgsNum);
                 }
             }
-            _ => {}
+            _ => {
+                return Err(CommandError::NonExistentCommand);
+            }
         }
 
-        println!("알 수 없는 명령어");
+        return Ok(());
+    }
+}
+
+pub enum CommandError {
+    WrongArgsNum,
+    NonExistentCommand,
+    NotFindStudent,
+    DuplicatedStudent,
+    FailParse,
+    WrongStatus,
+}
+
+impl From<std::num::ParseIntError> for CommandError {
+    fn from(_: std::num::ParseIntError) -> Self {
+        CommandError::FailParse
     }
 }
