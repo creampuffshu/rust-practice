@@ -5,26 +5,30 @@ use classroom::{Classroom, CommandError};
 fn main() {
     let mut classroom = Classroom::new();
 
-    classroom.execute("add Alice");
-    classroom.execute("add Bob");
+    execute(&mut classroom, "add Alice");
+    execute(&mut classroom, "add Bob");
 
-    classroom.execute("score Alice 80");
-    classroom.execute("score Alice 90");
+    execute(&mut classroom, "score Alice 80");
+    execute(&mut classroom, "score Alice 90");
 
-    classroom.execute("status Bob leave");
-    classroom.execute("score Bob 100");
+    execute(&mut classroom, "status Bob leave");
+    execute(&mut classroom, "score Bob 100");
 
-    classroom.execute("show Alice");
+    execute(&mut classroom, "show Alice");
 
-    classroom.execute("list");
+    execute(&mut classroom, "list");
 
-    classroom.execute("remove Bob");
+    execute(&mut classroom, "remove Bob");
+    execute(&mut classroom, "list 123");
+    execute(&mut classroom, "");
+    execute(&mut classroom, "hello");
+    execute(&mut classroom, "add");
+    execute(&mut classroom, "score Alice");
+    execute(&mut classroom, "status Alice something");
+}
 
-    classroom.execute("list 123");
-
-    classroom.execute("");
-    classroom.execute("hello");
-    classroom.execute("add");
-    classroom.execute("score Alice");
-    classroom.execute("status Alice something");
+fn execute(classroom: &mut Classroom, command: &str) {
+    if let Err(err) = classroom.execute(command) {
+        println!("{err:?}");
+    }
 }
