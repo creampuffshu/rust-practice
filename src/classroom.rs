@@ -1,4 +1,4 @@
-use crate::student::Student;
+use crate::student::{Status, Student};
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 
@@ -66,5 +66,81 @@ impl Classroom {
             }
         }
         count
+    }
+
+    pub fn execute(&mut self, command: &str) {
+        let parts: Vec<&str> = command.split_whitespace().collect();
+        if parts.is_empty() {
+            return;
+        }
+        match parts[0] {
+            "add" => {
+                if parts.len() == 2 {
+                    let name = parts[1];
+                    self.add_student(name.to_string());
+                    return;
+                }
+            }
+            "score" => {
+                if parts.len() == 3 {
+                    let name = parts[1];
+                    if let Ok(score) = parts[2].parse::<i32>() {
+                        if let Some(student) = self.find_student_mut(name) {
+                            student.add_score(score);
+                            return;
+                        }
+                    }
+                }
+            }
+            "status" => {
+                if parts.len() == 3 {
+                    let name = parts[1];
+                    let status = parts[2];
+                    if let Some(student) = self.find_student_mut(name) {
+                        match status {
+                            "active" => {
+                                student.change_status(Status::Active);
+                                return;
+                            }
+                            "leave" => {
+                                student.change_status(Status::Leave);
+                                return;
+                            }
+                            "graduated" => {
+                                student.change_status(Status::Graduated);
+                                return;
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+            }
+            "show" => {
+                if parts.len() == 2 {
+                    let name = parts[1];
+                    if let Some(student) = self.find_student(name) {
+                        student.print();
+                        return;
+                    }
+                }
+            }
+            "remove" => {
+                if parts.len() == 2 {
+                    let name = parts[1];
+                    self.remove_student(name);
+                    return;
+                }
+            }
+            "list" => {
+                println!("list");
+                if parts.len() == 1 {
+                    self.print_all();
+                    return;
+                }
+            }
+            _ => {}
+        }
+
+        println!("알 수 없는 명령어");
     }
 }
