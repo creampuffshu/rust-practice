@@ -31,6 +31,9 @@ fn main() {
 
     print_summary(&classroom);
     print_summary(classroom.find_student("Alice").unwrap());
+
+    let numbers = vec![10, 30, 20];
+    assert_eq!(largest(&numbers), Some(&30));
 }
 
 fn execute(classroom: &mut Classroom, command: &str) {
@@ -44,4 +47,20 @@ where
     T: Summary,
 {
     println!("{}", value.summary());
+}
+
+fn largest<T>(list: &[T]) -> Option<&T> 
+where 
+    T: PartialOrd,
+{
+    if list.is_empty() {
+        return None;
+    } 
+    let mut largest = &list[0];
+    for item in list {
+        if item > largest {
+            largest = item;
+        }
+    }
+    Some(largest)
 }
