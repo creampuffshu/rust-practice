@@ -1,7 +1,7 @@
 mod classroom;
 mod student;
 mod summary;
-use classroom::{Classroom, CommandError};
+use classroom::Classroom;
 
 use crate::summary::Summary;
 
@@ -29,11 +29,19 @@ fn main() {
     execute(&mut classroom, "score Alice");
     execute(&mut classroom, "status Alice something");
 
-    println!("{}", classroom.summary());
+    print_summary(&classroom);
+    print_summary(classroom.find_student("Alice").unwrap());
 }
 
 fn execute(classroom: &mut Classroom, command: &str) {
     if let Err(err) = classroom.execute(command) {
         println!("{err:?}");
     }
+}
+
+fn print_summary<T>(value: &T)
+where
+    T: Summary,
+{
+    println!("{}", value.summary());
 }

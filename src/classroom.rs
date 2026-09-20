@@ -3,7 +3,6 @@ use crate::summary::Summary;
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
 
-
 pub struct Classroom {
     students: HashMap<String, Student>,
 }
@@ -57,7 +56,10 @@ impl Classroom {
     }
 
     pub fn student_active_count(&self) -> usize {
-        self.students.iter().filter(|(_,value)| value.is_active()).count()
+        self.students
+            .iter()
+            .filter(|(_, value)| value.is_active())
+            .count()
     }
 
     pub fn student_count(&self) -> usize {
@@ -160,11 +162,14 @@ impl Classroom {
     }
 }
 
-impl Summary for Classroom{
+impl Summary for Classroom {
     fn summary(&self) -> String {
-        format!("학생 수: {} | 재학생 수: {}",self.student_count(),self.student_active_count())
+        format!(
+            "학생 수: {} | 재학생 수: {}",
+            self.student_count(),
+            self.student_active_count()
+        )
     }
-
 }
 
 #[derive(Debug)]

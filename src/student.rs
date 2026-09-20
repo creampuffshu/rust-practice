@@ -1,6 +1,6 @@
 use core::fmt;
 
-use crate::{summary::Summary};
+use crate::summary::Summary;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
