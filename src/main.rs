@@ -1,6 +1,9 @@
 mod classroom;
 mod student;
+mod summary;
 use classroom::{Classroom, CommandError};
+
+use crate::summary::Summary;
 
 fn main() {
     let mut classroom = Classroom::new();
@@ -25,6 +28,8 @@ fn main() {
     execute(&mut classroom, "add");
     execute(&mut classroom, "score Alice");
     execute(&mut classroom, "status Alice something");
+
+    println!("{}", classroom.summary());
 }
 
 fn execute(classroom: &mut Classroom, command: &str) {

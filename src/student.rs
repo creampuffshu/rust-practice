@@ -1,14 +1,28 @@
-pub struct Student {
-    name: String,
-    scores: Vec<i32>,
-    status: Status,
-}
+use core::fmt;
+
+use crate::{summary::Summary};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Status {
     Active,
     Leave,
     Graduated,
+}
+
+impl fmt::Display for Status {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Status::Active => write!(f, "재학"),
+            Status::Leave => write!(f, "휴학"),
+            Status::Graduated => write!(f, "졸업"),
+        }
+    }
+}
+
+pub struct Student {
+    name: String,
+    scores: Vec<i32>,
+    status: Status,
 }
 
 impl Student {
@@ -80,10 +94,18 @@ impl Student {
     }
 
     pub fn print_status(&self) {
-        match self.status {
-            Status::Active => println!("상태: 재학"),
-            Status::Leave => println!("상태: 휴학"),
-            Status::Graduated => println!("상태: 졸업"),
-        }
+        println!("상태: {}", self.status.to_string());
+    }
+}
+
+impl Summary for Student {
+    fn summary(&self) -> String {
+        format!(
+            "{} | 평균: {} | 최고점: {} | 상태: {}",
+            self.name,
+            self.average(),
+            self.highest_score().unwrap_or(0),
+            self.status.to_string()
+        )
     }
 }
