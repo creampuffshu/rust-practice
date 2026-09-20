@@ -49,13 +49,13 @@ where
     println!("{}", value.summary());
 }
 
-fn largest<T>(list: &[T]) -> Option<&T> 
-where 
+fn largest<T>(list: &[T]) -> Option<&T>
+where
     T: PartialOrd,
 {
     if list.is_empty() {
         return None;
-    } 
+    }
     let mut largest = &list[0];
     for item in list {
         if item > largest {
@@ -63,4 +63,24 @@ where
         }
     }
     Some(largest)
+}
+
+struct Range<T> {
+    min: T,
+    max: T,
+}
+
+impl<T> Range<T> {
+    fn new(min: T, max: T) -> Self {
+        Self { min, max }
+    }
+}
+
+impl<T> Range<T>
+where
+    T: PartialOrd,
+{
+    fn is_valid(&self) -> bool {
+        self.min <= self.max
+    }
 }
