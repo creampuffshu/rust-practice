@@ -32,6 +32,17 @@ impl Classroom {
         self.students.get_mut(name)
     }
 
+    pub fn higher_average<'a>(
+        first: &'a Student,
+        second: &'a Student,
+    ) -> &'a Student {
+        if first.average() > second.average() {
+            return first;
+        }else{
+            second
+        }
+    }
+
     pub fn remove_student(&mut self, name: &str) -> Option<Student> {
         self.students.remove(name)
     }

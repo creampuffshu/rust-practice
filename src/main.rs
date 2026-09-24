@@ -1,9 +1,5 @@
-mod classroom;
-mod student;
-mod summary;
-use classroom::Classroom;
-
-use crate::summary::Summary;
+use hello_rust::classroom::Classroom;
+use hello_rust::summary::Summary;
 
 fn main() {
     let mut classroom = Classroom::new();
