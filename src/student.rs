@@ -121,3 +121,85 @@ impl Summary for Student {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::student;
+
+    use super::*;
+
+    #[test]
+    fn add_score_rejects_student_on_leave_without_changing_scores() {
+        // 준비
+        let mut student = Student::new("Alice".into());
+        assert!(student.add_score(80));
+        student.change_status(Status::Leave);
+
+        // 실행
+        let added = student.add_score(100);
+
+        // 검증
+        assert!(!added);
+        assert_eq!(student.scores(), &[80]);
+        assert_eq!(student.status(), Status::Leave);
+    }
+
+    #[test]
+    fn empty_scores() {
+        // 준비
+        let mut student = Student::new("Alice".into());
+
+        // 실행
+        let average = student.average();
+        let hightest_score = student.highest_score();
+        let delete = student.remove_last_score();
+
+        // 검증
+        assert_eq!(average, 0.0);
+        assert_eq!(hightest_score, None);
+        assert_eq!(delete, None);
+    }
+
+    #[test]
+    fn add_score_average_hightest() {
+        // 준비
+        let mut student = Student::new("Alice".into());
+
+        // 실행
+        assert!(student.add_score(80));
+        assert!(student.add_score(91));
+
+        // 검증
+        assert_eq!(student.average(), 85.5);
+        assert_eq!(student.highest_score(), Some(91));
+    }
+
+    #[test]
+    fn add_score_on_graduated() {
+        let mut student = Student::new("Alice".into());
+
+        student.change_status(Status::Graduated);
+
+        assert!(!student.add_score(90));
+    }
+
+    #[test]
+    fn remove_score() {
+        let mut student = Student::new("Alice".into());
+        student.add_score(80);
+        student.add_score(91);
+
+        assert_eq!(student.remove_last_score(), Some(91));
+
+        assert_eq!(student.scores, &[80]);
+    }
+
+    #[test]
+    fn change_name() {
+        let mut student = Student::new("Alice".into());
+
+        student.rename("Bob".into());
+
+        assert_eq!(student.name(), "Bob");
+    }
+}
