@@ -96,6 +96,18 @@ impl Student {
     pub fn print_status(&self) {
         println!("상태: {}", self.status.to_string());
     }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn scores(&self) -> &[i32] {
+        &self.scores
+    }
+
+    pub fn status(&self) -> Status {
+        self.status
+    }
 }
 
 impl Summary for Student {
