@@ -63,25 +63,12 @@ impl Classroom {
         }
     }
 
-    pub fn student_active_count(&self) -> usize {
-        self.students
-            .iter()
-            .filter(|(_, value)| value.is_active())
-            .count()
-    }
-
     pub fn student_count(&self) -> usize {
         self.students.len()
     }
 
     pub fn active_student_count(&self) -> usize {
-        let mut count = 0;
-        for student in self.students.values() {
-            if student.is_active() {
-                count += 1;
-            }
-        }
-        count
+        self.students.values().filter(|student| student.is_active()).count()
     }
 
     pub fn execute(&mut self, command: &str) -> Result<(), CommandError> {
@@ -175,12 +162,12 @@ impl Summary for Classroom {
         format!(
             "학생 수: {} | 재학생 수: {}",
             self.student_count(),
-            self.student_active_count()
+            self.active_student_count()
         )
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum CommandError {
     WrongArgsNum,
     NonExistentCommand,
